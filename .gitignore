@@ -8,3 +8,14 @@ project/project/
 *.class
 *.log
 .DS_Store
+
+# --- sbt / Scala build artifacts ---
+**/target/
+**/project/target/
+**/.bsp/
+**/.bloop/
+**/.metals/
+**/.idea/
+**/.classpath
+**/.project
+**/.settings/
