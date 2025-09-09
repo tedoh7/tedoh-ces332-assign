@@ -1,63 +1,53 @@
 package funsets
 
-import org.scalatest.funsuite.AnyFunSuite
-import FunSets._
+object FunSets {
+  /** A set is represented by its characteristic function */
+  type Set = Int => Boolean
 
-class FunSetSuite extends AnyFunSuite {
+  /** Indicates whether a set contains a given element. */
+  def contains(s: Set, elem: Int): Boolean = s(elem)
 
-  test("singletonSet contains its element") {
-    val s = singletonSet(1)
-    assert(contains(s, 1))
-    assert(!contains(s, 2))
+  /** Returns the set of the one given element. */
+  def singletonSet(elem: Int): Set = (x: Int) => x == elem
+
+  /** Returns the union of the two given sets. */
+  def union(s: Set, t: Set): Set = (x: Int) => s(x) || t(x)
+
+  /** Returns the intersection of the two given sets. */
+  def intersect(s: Set, t: Set): Set = (x: Int) => s(x) && t(x)
+
+  /** Returns the difference of the two given sets. */
+  def diff(s: Set, t: Set): Set = (x: Int) => s(x) && !t(x)
+
+  /** Returns the subset of `s` for which `p` holds. */
+  def filter(s: Set, p: Int => Boolean): Set = (x: Int) => s(x) && p(x)
+
+  /** We consider only -1000 <= x <= 1000 */
+  val bound = 1000
+
+  /** Returns whether all bounded integers within `s` satisfy `p`. */
+  def forall(s: Set, p: Int => Boolean): Boolean = {
+    def iter(a: Int): Boolean = {
+      if (a > bound) true
+      else if (s(a) && !p(a)) false
+      else iter(a + 1)
+    }
+    iter(-bound)
   }
 
-  test("union contains all elements of each set") {
-    val s1 = singletonSet(1)
-    val s2 = singletonSet(2)
-    val u = union(s1, s2)
-    assert(contains(u, 1))
-    assert(contains(u, 2))
-    assert(!contains(u, 3))
+  /** Returns whether there exists a bounded integer within `s` that satisfies `p`. */
+  def exists(s: Set, p: Int => Boolean): Boolean = !forall(s, x => !p(x))
+
+  /** Returns a set transformed by applying `f` to each element of `s`. */
+  def map(s: Set, f: Int => Int): Set =
+    (y: Int) => exists(s, x => f(x) == y)
+
+  /** Displays the contents of a set */
+  def toString(s: Set): String = {
+    val xs = for (i <- -bound to bound if contains(s, i)) yield i
+    xs.mkString("{", ",", "}")
   }
 
-  test("intersect keeps only common elements") {
-    val a = union(singletonSet(1), singletonSet(2)) // {1,2}
-    val b = union(singletonSet(2), singletonSet(3)) // {2,3}
-    val i = intersect(a, b) // {2}
-    assert(contains(i, 2))
-    assert(!contains(i, 1))
-    assert(!contains(i, 3))
-  }
-
-  test("diff removes elements of second set") {
-    val a = union(singletonSet(1), singletonSet(2)) // {1,2}
-    val b = singletonSet(2) // {2}
-    val d = diff(a, b) // {1}
-    assert(contains(d, 1))
-    assert(!contains(d, 2))
-  }
-
-  test("filter keeps elems satisfying predicate") {
-    val s = union(union(singletonSet(1), singletonSet(2)), singletonSet(3)) // {1,2,3}
-    val f = filter(s, _ % 2 == 1) // odd numbers
-    assert(contains(f, 1))
-    assert(contains(f, 3))
-    assert(!contains(f, 2))
-  }
-
-  test("forall and exists work as expected") {
-    val s = union(union(singletonSet(-1), singletonSet(0)), singletonSet(2)) // {-1,0,2}
-    assert(forall(s, _ <= 2))
-    assert(!forall(s, _ >= 0))
-    assert(exists(s, _ == -1))
-    assert(!exists(s, _ == 3))
-  }
-
-  test("map applies function to all elements") {
-    val s = union(singletonSet(1), singletonSet(2)) // {1,2}
-    val m = map(s, x => x * x) // {1,4}
-    assert(contains(m, 1))
-    assert(contains(m, 4))
-    assert(!contains(m, 2))
-  }
+  /** Prints the contents of a set on the console. */
+  def printSet(s: Set): Unit = println(toString(s))
 }
