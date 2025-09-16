@@ -1,6 +1,6 @@
 package objsets
 
-import org.junit._
+import org.junit.Test
 import org.junit.Assert._
 
 class TweetSetSuite {
