@@ -1,0 +1,8 @@
+# sbt / Scala build artifacts
+target/
+project/target/
+project/project/
+.metals/
+.bloop/
+.idea/
+*.class
