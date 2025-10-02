@@ -1,0 +1,1 @@
+// no sbt plugins required
