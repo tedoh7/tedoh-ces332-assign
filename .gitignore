@@ -1,4 +1,4 @@
-# sbt / Scala
+# sbt/scala
 target/
 project/target/
 project/project/
@@ -7,15 +7,16 @@ project/project/
 .idea/
 *.class
 *.log
-.DS_Store
 
-# --- sbt / Scala build artifacts ---
-**/target/
-**/project/target/
-**/.bsp/
-**/.bloop/
-**/.metals/
-**/.idea/
-**/.classpath
-**/.project
-**/.settings/
+# OS / Editor
+.DS_Store
+*.swp
+*.swo
+
+# node/npm (혹시 섞여 있어도 대비)
+node_modules/
+
+# coursier/ivy caches (일반적으로 커밋 불가)
+.cache/
+.ivy2/
+.coursier/
