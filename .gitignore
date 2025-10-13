@@ -20,3 +20,7 @@ node_modules/
 .cache/
 .ivy2/
 .coursier/
+
+# IDE/BSP metadata
+.bsp/
+**/.bsp/
